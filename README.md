@@ -1,3 +1,6 @@
+> Migrated from [github.com/dimsuz/yolk](https://github.com/dimsuz/yolk) (original author: Dmitry Suzdalev, MIT).
+> Published versions up to now: `ru.dimsuz:yolk`. New releases will be published by appKODE under the `ru.kode` group.
+
 # yolk
 Simple key-based asynchronous loading cache
 
