@@ -9,7 +9,7 @@ public actual class MemoryKeyStore<K : Any> actual constructor(
   private val store = HashMap<K, KeyTimestamps>()
   private val mutex = Mutex()
 
-  override suspend fun read(key: K): KeyTimestamps? {
+  actual override suspend fun read(key: K): KeyTimestamps? {
     return mutex.withLock {
       val value = store[key]?.copy(accessAt = ticker.now)
       if (value != null) {
@@ -19,7 +19,7 @@ public actual class MemoryKeyStore<K : Any> actual constructor(
     }
   }
 
-  override suspend fun write(key: K, timestamps: KeyTimestamps) {
+  actual override suspend fun write(key: K, timestamps: KeyTimestamps) {
     mutex.withLock {
       val value = store[key]
       if (value != null) {
@@ -28,7 +28,7 @@ public actual class MemoryKeyStore<K : Any> actual constructor(
     }
   }
 
-  override suspend fun update(key: K, transform: (KeyTimestamps?) -> KeyTimestamps?) {
+  actual override suspend fun update(key: K, transform: (KeyTimestamps?) -> KeyTimestamps?) {
     mutex.withLock {
       val value = transform(store[key])
       if (value != null) {
@@ -37,7 +37,7 @@ public actual class MemoryKeyStore<K : Any> actual constructor(
     }
   }
 
-  override suspend fun remove(key: K) {
+  actual override suspend fun remove(key: K) {
     mutex.withLock {
       store.remove(key)
     }

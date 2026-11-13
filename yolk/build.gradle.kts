@@ -1,27 +1,29 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   id(libs.plugins.kotlinMultiplatform.get().pluginId)
-  id(libs.plugins.dokka.get().pluginId) apply false
-  `maven-publish`
+  alias(libs.plugins.vanniktech.mavenPublish)
 }
 
+group = providers.gradleProperty("pomGroupId").get()
+version = providers.gradleProperty("versionName").get()
+
 kotlin {
-  targets {
-    jvm {
-      compilations.all {
-        kotlinOptions {
-          jvmTarget = "1.8"
-          moduleName = "yolk-library"
-        }
-      }
-    }
-    ios()
-    iosSimulatorArm64()
+  explicitApi()
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 
-  sourceSets {
-    all {
-      languageSettings.optIn("kotlin.time.ExperimentalTime")
+  jvm {
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_1_8)
     }
+  }
+  iosX64()
+  iosArm64()
+  iosSimulatorArm64()
+
+  sourceSets {
     val commonMain by getting {
       dependencies {
         api(libs.bundles.coroutines)
@@ -35,28 +37,10 @@ kotlin {
       }
     }
 
-    val jvmMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-      }
-    }
-
     val jvmTest by getting {
       dependencies {
         implementation(libs.bundles.koTestJvm)
       }
-    }
-
-    val iosMain by getting {
-      dependencies {
-      }
-    }
-    val iosTest by getting {
-      dependencies {
-      }
-    }
-    val iosSimulatorArm64Main by getting {
-      dependsOn(iosMain)
     }
   }
 }
@@ -71,5 +55,53 @@ tasks.named<Test>("jvmTest") {
       org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
     )
     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+  }
+}
+
+mavenPublishing {
+  coordinates(artifactId = "yolk")
+
+  publishToMavenCentral()
+  signAllPublications()
+
+  pom {
+    val pomDescription: String by project
+    val pomUrl: String by project
+    val pomScmUrl: String by project
+    val pomScmConnection: String by project
+    val pomScmDevConnection: String by project
+    val pomLicenseName: String by project
+    val pomLicenseUrl: String by project
+    val pomLicenseDist: String by project
+
+    name.set("yolk")
+    description.set(pomDescription)
+    url.set(pomUrl)
+
+    scm {
+      url.set(pomScmUrl)
+      connection.set(pomScmConnection)
+      developerConnection.set(pomScmDevConnection)
+    }
+
+    licenses {
+      license {
+        name.set(pomLicenseName)
+        url.set(pomLicenseUrl)
+        distribution.set(pomLicenseDist)
+      }
+    }
+
+    developers {
+      developer {
+        id.set("dimsuz")
+        name.set("Dmitry Suzdalev")
+      }
+      developer {
+        id.set("appKODE")
+        name.set("appKODE")
+        url.set("https://github.com/appKODE")
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 package ru.dimsuz.yolk
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 public data class KeyTimestamps(
   val accessAt: Instant?,

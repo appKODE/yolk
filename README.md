@@ -1,5 +1,5 @@
 > Migrated from [github.com/dimsuz/yolk](https://github.com/dimsuz/yolk) (original author: Dmitry Suzdalev, MIT).
-> Published versions up to now: `ru.dimsuz:yolk`. New releases will be published by appKODE under the `ru.kode` group.
+> Versions up to 1.1.1 were published as `ru.dimsuz:yolk`. Starting from 2.0.0 releases are published by appKODE as `ru.kode:yolk`.
 
 # yolk
 Simple key-based asynchronous loading cache
@@ -10,9 +10,9 @@ Library is published on Maven Central repository.
 
 ```
 // main library
-implementation("ru.dimsuz:yolk:1.1.0")
-// extensions to use with SqlDelight library
-implementation("ru.dimsuz:yolk-sqldelight-extensions:1.1.0")
+implementation("ru.kode:yolk:2.0.0")
+// extensions to use with SqlDelight 2.x library
+implementation("ru.kode:yolk-sqldelight-extensions:2.0.0")
 ```
 
 # License

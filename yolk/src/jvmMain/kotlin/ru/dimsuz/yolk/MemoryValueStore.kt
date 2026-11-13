@@ -5,15 +5,15 @@ import java.util.concurrent.ConcurrentHashMap
 public actual class MemoryValueStore<K : Any, V> : ValueStore<K, V> {
   private val store = ConcurrentHashMap<K, V>()
 
-  override suspend fun read(key: K): V? {
+  actual override suspend fun read(key: K): V? {
     return store[key]
   }
 
-  override suspend fun write(key: K, value: V) {
+  actual override suspend fun write(key: K, value: V) {
     store[key] = value
   }
 
-  override suspend fun remove(key: K) {
+  actual override suspend fun remove(key: K) {
     store.remove(key)
   }
 }
