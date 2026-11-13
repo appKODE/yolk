@@ -1,8 +1,9 @@
 package ru.dimsuz.yolk.extension.sqldelight
 
 import app.cash.turbine.test
-import com.squareup.sqldelight.Query
-import com.squareup.sqldelight.db.SqlCursor
+import app.cash.sqldelight.Query
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,51 +16,48 @@ import ru.dimsuz.yolk.MemoryKeyStore
 import ru.dimsuz.yolk.MemoryValueStore
 import ru.dimsuz.yolk.Ticker
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 
 class FlowExtensionsTest : ShouldSpec({
   should("emit new value after cache is invalidated second time") {
 
     val tableData = MutableStateFlow(0L)
 
-    val query = object : Query<Int>(mutableListOf(), { it.getLong(0)!!.toInt() }) {
-      override fun execute(): SqlCursor {
-        return object : SqlCursor {
-          override fun close() {
+    val listeners = mutableListOf<Query.Listener>()
+    val query = object : Query<Int>({ it.getLong(0)!!.toInt() }) {
+      override fun <R> execute(mapper: (SqlCursor) -> QueryResult<R>): QueryResult<R> {
+        return mapper(
+          object : SqlCursor {
+            var count = 0
+            override fun next(): QueryResult<Boolean> = QueryResult.Value(count++ == 0)
+            override fun getString(index: Int): String? = null
+            override fun getLong(index: Int): Long = tableData.value
+            override fun getBytes(index: Int): ByteArray? = null
+            override fun getDouble(index: Int): Double? = null
+            override fun getBoolean(index: Int): Boolean? = null
           }
+        )
+      }
 
-          override fun getBytes(index: Int): ByteArray? {
-            return null
-          }
+      override fun addListener(listener: Listener) {
+        listeners.add(listener)
+      }
 
-          override fun getDouble(index: Int): Double? {
-            return null
-          }
-
-          override fun getLong(index: Int): Long {
-            return tableData.value
-          }
-
-          override fun getString(index: Int): String? {
-            return null
-          }
-
-          var count = 0
-          override fun next(): Boolean {
-            return count++ == 0
-          }
-        }
+      override fun removeListener(listener: Listener) {
+        listeners.remove(listener)
       }
     }
 
     val ticker = Ticker.fake()
     val cache = Cache<Int, Unit>(
-      expirePolicy = ExpirePolicy.afterWrite(Duration.hours(1), ticker),
+      expirePolicy = ExpirePolicy.afterWrite(1.hours, ticker),
       fetch = { key ->
         println("fetching key")
         tableData.update { it + 1 }
-        ticker.advanceBy(Duration.milliseconds(200))
-        query.notifyDataChanged()
-        ticker.advanceBy(Duration.milliseconds(200))
+        ticker.advanceBy(200.milliseconds)
+        listeners.toList().forEach { it.queryResultsChanged() }
+        ticker.advanceBy(200.milliseconds)
       },
       keyStore = MemoryKeyStore(ticker),
       valueStore = MemoryValueStore(),
@@ -72,7 +70,7 @@ class FlowExtensionsTest : ShouldSpec({
       .test {
         cache.load(key = 3)
         awaitItem() shouldBe 1
-        ticker.advanceBy(Duration.hours(2))
+        ticker.advanceBy(2.hours)
         cache.load(key = 3)
         awaitItem() shouldBe 2
         cancelAndIgnoreRemainingEvents()

@@ -1,27 +1,25 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   id(libs.plugins.kotlinMultiplatform.get().pluginId)
-  id(libs.plugins.dokka.get().pluginId)
-  `maven-publish`
 }
 
 kotlin {
-  targets {
-    jvm {
-      compilations.all {
-        kotlinOptions {
-          jvmTarget = "1.8"
-          moduleName = "yolk-sqldelight-extensions"
-        }
-      }
-    }
-    ios()
-    iosSimulatorArm64()
+  explicitApi()
+  compilerOptions {
+    freeCompilerArgs.add("-Xexpect-actual-classes")
   }
 
-  sourceSets {
-    all {
-      languageSettings.optIn("kotlin.time.ExperimentalTime")
+  jvm {
+    compilerOptions {
+      jvmTarget.set(JvmTarget.JVM_1_8)
     }
+  }
+  iosX64()
+  iosArm64()
+  iosSimulatorArm64()
+
+  sourceSets {
     val commonMain by getting {
       dependencies {
         api(project(":yolk"))
@@ -37,28 +35,10 @@ kotlin {
       }
     }
 
-    val jvmMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-      }
-    }
-
     val jvmTest by getting {
       dependencies {
         implementation(libs.bundles.koTestJvm)
       }
-    }
-
-    val iosMain by getting {
-      dependencies {
-      }
-    }
-    val iosTest by getting {
-      dependencies {
-      }
-    }
-    val iosSimulatorArm64Main by getting {
-      dependsOn(iosMain)
     }
   }
 }

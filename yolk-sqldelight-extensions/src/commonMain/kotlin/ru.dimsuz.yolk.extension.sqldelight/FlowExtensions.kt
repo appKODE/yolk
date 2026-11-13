@@ -1,6 +1,6 @@
 package ru.dimsuz.yolk.extension.sqldelight
 
-import com.squareup.sqldelight.Query
+import app.cash.sqldelight.Query
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter

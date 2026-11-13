@@ -1,24 +1,21 @@
 [versions]
-koTest = "5.5.5"
-ktlint = "0.43.2"
-coroutines = "1.6.4"
-kotlin = "1.7.21"
-kotlinDateTime = "0.3.3"
-spotless = "6.0.5"
-dokka = "1.5.31"
-sqlDelight = "1.5.5"
-turbine = "0.7.0"
+koTest = "5.9.1"
+coroutines = "1.10.2"
+kotlin = "2.3.20"
+kotlinDateTime = "0.7.1"
+sqlDelight = "2.4.1"
+turbine = "1.2.1"
+vanniktechMavenPublish = "0.37.0"
 
 [libraries]
 kotest-junit-runner = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "koTest" }
 kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "koTest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "koTest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "koTest" }
-ktlint = { module = "com.pinterest:ktlint", version.ref = "ktlint" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinDateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinDateTime" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
-sqlDelightRuntime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelight" }
+sqlDelightRuntime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
 
 [bundles]
 koTestCommon = [ "kotest-assertions-core", "kotest-property", "kotest-framework-engine" ]
@@ -26,7 +23,5 @@ koTestJvm = [ "kotest-junit-runner" ]
 coroutines = [ "coroutines-core" ]
 
 [plugins]
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin"}
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
