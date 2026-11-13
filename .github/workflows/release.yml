@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: |
           ./gradlew --no-daemon --stacktrace \
-            jvmTest iosSimulatorArm64Test
+            jvmTest linkDebugTestIosSimulatorArm64
 
       - name: Validate tag matches version
         run: |

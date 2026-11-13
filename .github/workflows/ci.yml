@@ -31,4 +31,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run tests and assemble
-        run: ./gradlew --no-daemon --stacktrace jvmTest iosSimulatorArm64Test assemble
+        run: ./gradlew --no-daemon --stacktrace jvmTest linkDebugTestIosSimulatorArm64 assemble
