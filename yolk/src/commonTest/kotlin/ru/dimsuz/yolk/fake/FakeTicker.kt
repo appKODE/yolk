@@ -1,6 +1,6 @@
 package ru.dimsuz.yolk.fake
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import ru.dimsuz.yolk.Ticker
 import kotlin.time.Duration
 

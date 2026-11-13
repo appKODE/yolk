@@ -9,7 +9,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import ru.dimsuz.yolk.Cache
 import ru.dimsuz.yolk.ExpirePolicy
 import ru.dimsuz.yolk.MemoryKeyStore

@@ -1,7 +1,7 @@
 package ru.dimsuz.yolk
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 public interface Ticker {
   public val now: Instant
